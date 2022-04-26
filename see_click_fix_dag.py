@@ -59,6 +59,13 @@ def drop_columns(df):
     return df
 
 
+def convert_to_datetime(df):
+    cols = ['created_at', 'acknowledged_at', 'closed_at', 'reopened_at', 'updated_at']
+    for col in cols:
+        df[col] = pd.to_datetime(df[col])
+        return df
+
+
 def insert_elasticsearch():
     from elasticsearch import Elasticsearch
     host = 'https://localhost:9200'
