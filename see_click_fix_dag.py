@@ -1,6 +1,7 @@
 import requests
 import pandas as pd
 import time
+import os
 
 
 # import json
@@ -68,10 +69,10 @@ def convert_to_datetime(df):
 
 def insert_elasticsearch():
     from elasticsearch import Elasticsearch
-    host = 'https://localhost:9200'
-    ELASTIC_PASSWORD = "Q0AYUcVWmef*wPgMOGHj"
-    cert = "/Users/mike/elasticsearch-8.1.2/config/certs/http_ca.crt"
-    es = Elasticsearch(host, ca_certs=cert, basic_auth=("elastic", ELASTIC_PASSWORD))
+    host = os.environ.get('ELASTIC_HOST')
+    password = os.environ.get('ELASTIC_PASSWORD')
+    cert = os.environ.get('ELASTIC_CERT')
+    es = Elasticsearch(host, ca_certs=cert, basic_auth=("elastic", password))
 
     df = pd.read_csv('/Tutorials/311/AF_Version/scf_issues_all_active.csv')
     for i, r in df.iterrows():
