@@ -31,6 +31,11 @@ def request_scf():
     #         df = pd.json_normalize(r, record_path="issues")
     #         dataframes.append(df)
 
+def concat_dfs(dataframes):
+    full_df = pd.concat(dataframes)
+    return full_df
+
+
 def drop_columns():
     df = pd.read_csv(
         '/Tutorials/311/AF_Version/scf_issues_all_active.csv')
