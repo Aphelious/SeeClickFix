@@ -36,9 +36,7 @@ def concat_dfs(dataframes):
     return full_df
 
 
-def drop_columns():
-    df = pd.read_csv(
-        '/Tutorials/311/AF_Version/scf_issues_all_active.csv')
+def drop_columns(df):
     cols = ['flag_url',
            'comment_url',
            'request_type.url',
@@ -58,6 +56,7 @@ def drop_columns():
            'private_visibility',
            'url']
     df.drop(columns=cols, inplace=True)
+    return df
 
 
 def insert_elasticsearch():
