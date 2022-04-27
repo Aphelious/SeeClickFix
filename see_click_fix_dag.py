@@ -83,16 +83,12 @@ def insert_elasticsearch():
 
 def query_elasticsearch():
     from elasticsearch import Elasticsearch
-    host = 'https://localhost:9200'
-    ELASTIC_PASSWORD = "Q0AYUcVWmef*wPgMOGHj"
-    cert = "/Users/mike/elasticsearch-8.1.2/config/certs/http_ca.crt"
-    es = Elasticsearch(host, ca_certs=cert, basic_auth=("elastic", ELASTIC_PASSWORD))
+    host = os.environ.get('ELASTIC_HOST')
+    password = os.environ.get('ELASTIC_PASSWORD')
+    cert = os.environ.get('ELASTIC_CERT')
+    es = Elasticsearch(host, ca_certs=cert, basic_auth=("elastic", password))
 
-    query = {"match":{"name": "Ashley Morgan"}}
+    query = {"matchall":{}}
     res = es.search(index='seeclickfix', size=10, query=query)
     for doc in res['hits']['hits']:
         print(doc['_source'])
-
-
-
-
