@@ -1,4 +1,4 @@
-##SeeClickFix ETL pipline project
+##SeeClickFix ETL pipeline project
 
 SeeClickFix is an application some local municipalities uses to track resident's
 complaints about anything from graffiti, abandoned cars, broken fire hydrants, 
@@ -38,8 +38,12 @@ complaint types.
 It is my goal to find a dashboard tool to develop directly from Python but 
 there are many available and I'm still researching which I'd like to learn. 
 
-###Visualizations:
+###Visualization samples:
 
+![Bar graph of complaints over past 4 years](./assets/scf-bar.png 
+"Bar graph of complaints over past 4 years")
 
+![Pie/donut chart of complaint types](./assets/scf-pie.png 
+"Pie/donut chart of complaint types")
 
 ###
