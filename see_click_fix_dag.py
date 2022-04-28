@@ -70,6 +70,17 @@ def convert_to_datetime():
     df.to_csv('/Users/mike/Desktop/Main/Programming/Projects/Tutorials/311/scf_issues.csv', index=False)
 
 
+def drop_null_descriptions():
+    '''Drop all rows where summary and description columns are null'''
+
+    df = pd.read_csv('/Users/mike/Desktop/Main/Programming/Projects/Tutorials/311/scf_issues.csv')
+    orig_df_len = len(df.index)
+    new_df = df.dropna(axis='index', how='all', subset=['summary', 'description'])
+    new_df_len = len(new_df.index)
+    new_df.to_csv('/Users/mike/Desktop/Main/Programming/Projects/Tutorials/311/scf_issues.csv', index=False)
+    return f'Total rows dropped: {orig_df_len - new_df_len}'
+
+
 def insert_elasticsearch():
     from elasticsearch import Elasticsearch
     host = os.environ.get('ELASTIC_HOST')
