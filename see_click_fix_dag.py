@@ -3,7 +3,6 @@ import pandas as pd
 import time
 import os
 
-
 # import json
 # from airflow import DAG
 # from airflow.operators.bash import BashOperator
@@ -67,6 +66,10 @@ def convert_to_datetime(df):
     return df
 
 
+def write_to_csv(df):
+    df.to_csv('./Tutorials/311/scf_issues_all_active.csv')
+
+
 def insert_elasticsearch():
     from elasticsearch import Elasticsearch
     host = os.environ.get('ELASTIC_HOST')
@@ -74,7 +77,7 @@ def insert_elasticsearch():
     cert = os.environ.get('ELASTIC_CERT')
     es = Elasticsearch(host, ca_certs=cert, basic_auth=("elastic", password))
 
-    df = pd.read_csv('/Tutorials/311/AF_Version/scf_issues_all_active.csv')
+    df = pd.read_csv('./Tutorials/311/scf_issues_all_active.csv')
     for i, r in df.iterrows():
         doc = r.to_json()
         res = es.index(index="seeclickfix", document=doc)
