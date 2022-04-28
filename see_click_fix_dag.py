@@ -33,7 +33,7 @@ def request_scf():
 
 def concat_dfs(dataframes):
     full_df = pd.concat(dataframes)
-    return full_df
+    full_df.to_csv('./Tutorials/311/scf_issues_all_active.csv')
 
 
 def drop_columns(df):
@@ -56,17 +56,13 @@ def drop_columns(df):
            'private_visibility',
            'url']
     df.drop(columns=cols, inplace=True)
-    return df
+    df.to_csv('./Tutorials/311/scf_issues_all_active.csv')
 
 
 def convert_to_datetime(df):
     cols = ['created_at', 'acknowledged_at', 'closed_at', 'reopened_at', 'updated_at']
     for col in cols:
         df[col] = pd.to_datetime(df[col])
-    return df
-
-
-def write_to_csv(df):
     df.to_csv('./Tutorials/311/scf_issues_all_active.csv')
 
 
