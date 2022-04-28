@@ -13,7 +13,7 @@ dataframes = []
 
 def request_scf():
     url = 'https://seeclickfix.com/api/v2/issues?'
-    params = {'place_url': 'bernalillo-county', 'per_page': '200', "status": "Archived"}
+    params = {'place_url': 'bernalillo-county', 'per_page': '200'}
     r = requests.get(url, params=params)
     r = r.json()
     print(r['metadata']['pagination']['pages'])
