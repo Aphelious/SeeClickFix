@@ -20,23 +20,26 @@ def request_scf():
     df = pd.json_normalize(r, record_path="issues")
     dataframes.append(df)
     # while r['metadata']['pagination']['page'] <= r['metadata']['pagination']['pages']:
-    #     time.sleep(2)
-    #     print(r['metadata']['pagination']['page'])
-    #     url = r['metadata']['pagination']['next_page_url']
-    #     if url == None:
-    #         break
-    #     else:
-    #         r = requests.get(f'{url}', params=params)
-    #         r = r.json()
-    #         df = pd.json_normalize(r, record_path="issues")
-    #         dataframes.append(df)
+    for i in range(10):
+        if r['metadata']['pagination']['page'] <= i:
+            time.sleep(1)
+            print(r['metadata']['pagination']['page'])
+            url = r['metadata']['pagination']['next_page_url']
+            if url == None:
+                break
+            else:
+                r = requests.get(f'{url}', params=params)
+                r = r.json()
+                df = pd.json_normalize(r, record_path="issues")
+                dataframes.append(df)
 
 def concat_dfs(dataframes):
     full_df = pd.concat(dataframes)
-    full_df.to_csv('./Tutorials/311/scf_issues_all_active.csv')
+    full_df.to_csv('/Users/mike/Desktop/Main/Programming/Projects/Tutorials/311/scf_issues.csv', index=False)
 
 
-def drop_columns(df):
+def drop_columns():
+    df = pd.read_csv('/Users/mike/Desktop/Main/Programming/Projects/Tutorials/311/scf_issues.csv')
     cols = ['flag_url',
            'comment_url',
            'request_type.url',
@@ -56,14 +59,15 @@ def drop_columns(df):
            'private_visibility',
            'url']
     df.drop(columns=cols, inplace=True)
-    df.to_csv('./Tutorials/311/scf_issues_all_active.csv')
+    df.to_csv('/Users/mike/Desktop/Main/Programming/Projects/Tutorials/311/scf_issues.csv', index=False)
 
 
-def convert_to_datetime(df):
+def convert_to_datetime():
+    df = pd.read_csv('/Users/mike/Desktop/Main/Programming/Projects/Tutorials/311/scf_issues.csv')
     cols = ['created_at', 'acknowledged_at', 'closed_at', 'reopened_at', 'updated_at']
     for col in cols:
         df[col] = pd.to_datetime(df[col])
-    df.to_csv('./Tutorials/311/scf_issues_all_active.csv')
+    df.to_csv('/Users/mike/Desktop/Main/Programming/Projects/Tutorials/311/scf_issues.csv', index=False)
 
 
 def insert_elasticsearch():
@@ -73,7 +77,7 @@ def insert_elasticsearch():
     cert = os.environ.get('ELASTIC_CERT')
     es = Elasticsearch(host, ca_certs=cert, basic_auth=("elastic", password))
 
-    df = pd.read_csv('./Tutorials/311/scf_issues_all_active.csv')
+    df = pd.read_csv('/Users/mike/Desktop/Main/Programming/Projects/Tutorials/311/scf_issues.csv')
     for i, r in df.iterrows():
         doc = r.to_json()
         res = es.index(index="seeclickfix", document=doc)
