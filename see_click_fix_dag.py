@@ -1,12 +1,11 @@
 import requests
 import pandas as pd
 import time
-import datatime as dt
+import datetime as dt
 from datetime import timedelta
 import os
 
 from airflow import DAG
-from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
 
 
