@@ -123,12 +123,16 @@ with DAG('seeclickfix',
     query_scf = PythonOperator(task_id='Query_SCF',
                                pythoncallable=query_scf)
 
-    concat_df = PythonOperator(task_id='Concat_DFs',
+    concat_dfs = PythonOperator(task_id='Concat_DFs',
                                pythoncallable=concat_dfs)
 
     drop_columns = PythonOperator(task_id='Drop_Columns',
                                   pythoncallable=drop_columns)
 
+    drop_null_descriptions = PythonOperator(task_id='Drop_Null_Descriptions',
+                                            pythoncallable=drop_null_descriptions)
 
-    insert_data = PythonOperator(task_id='InsertDataElasticsearch',
+    insert_elasticsearch = PythonOperator(task_id='Insert_Elasticsearch',
                                  python_callable=insert_elasticsearch)
+
+    query_scf >> concat_dfs >> drop_columns >> drop_null_descriptions >> insert_elasticsearch
