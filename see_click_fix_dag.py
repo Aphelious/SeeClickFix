@@ -1,12 +1,13 @@
 import requests
 import pandas as pd
 import time
+import datatime as dt
+from datetime import timedelta
 import os
 
-# import json
-# from airflow import DAG
-# from airflow.operators.bash import BashOperator
-# from airflow.operators.python import PythonOperator
+from airflow import DAG
+from airflow.operators.bash import BashOperator
+from airflow.operators.python import PythonOperator
 
 
 dataframes = []
@@ -88,10 +89,10 @@ def insert_elasticsearch():
     cert = os.environ.get('ELASTIC_CERT')
     es = Elasticsearch(host, ca_certs=cert, basic_auth=("elastic", password))
 
-    df = pd.read_csv('/Users/mike/Desktop/Main/Programming/Projects/Tutorials/311/scf_issues.csv')
+    df = pd.read_csv('/Users/mike/Desktop/Main/Programming/Projects/Tutorials/311/scf_issues_test.csv')
     for i, r in df.iterrows():
         doc = r.to_json()
-        res = es.index(index="seeclickfix", document=doc)
+        res = es.index(index="seeclickfix2", document=doc)
         print(res)
 
 
@@ -106,3 +107,28 @@ def query_elasticsearch():
     res = es.search(index='seeclickfix', size=10, query=query)
     for doc in res['hits']['hits']:
         print(doc['_source'])
+
+
+default_args = {
+    'owner': 'mike',
+    'start_date': dt.datetime(2022, 4, 29),
+    'retries': 1,
+    'retry_delay': dt.timedelta(minutes=5)
+}
+
+with DAG('seeclickfix',
+         default_args=default_args,
+    schedule_interval=timedelta(minutes=30)) as dag:
+
+    query_scf = PythonOperator(task_id='Query_SCF',
+                               pythoncallable=query_scf)
+
+    concat_df = PythonOperator(task_id='Concat_DFs',
+                               pythoncallable=concat_dfs)
+
+    drop_columns = PythonOperator(task_id='Drop_Columns',
+                                  pythoncallable=drop_columns)
+
+
+    insert_data = PythonOperator(task_id='InsertDataElasticsearch',
+                                 python_callable=insert_elasticsearch)
