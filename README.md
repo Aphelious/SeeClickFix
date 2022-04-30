@@ -46,4 +46,6 @@ there are many available and I'm still researching which I'd like to learn.
 ![Pie/donut chart of complaint types](./assets/scf-pie.png 
 "Pie/donut chart of complaint types")
 
+![Screenshot of Airflow DAG run](./assets/scf-dag-in-action.png 
+"Screenshot of Airflow DAG run")
 ###
