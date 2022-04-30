@@ -119,19 +119,19 @@ with DAG('seeclickfix',
          default_args=default_args,
     schedule_interval=timedelta(minutes=30)) as dag:
 
-    request_scf = PythonOperator(task_id='Request_SCF',
+    get_scf_data = PythonOperator(task_id='Request_SCF',
                                python_callable=request_scf)
 
-    concat_dfs = PythonOperator(task_id='Concat_DFs',
+    concat_dataframes = PythonOperator(task_id='Concat_DFs',
                                python_callable=concat_dfs)
 
-    drop_columns = PythonOperator(task_id='Drop_Columns',
+    drop_cols = PythonOperator(task_id='Drop_Columns',
                                   python_callable=drop_columns)
 
-    drop_null_descriptions = PythonOperator(task_id='Drop_Null_Descriptions',
+    drop_empty_descriptions = PythonOperator(task_id='Drop_Null_Descriptions',
                                             python_callable=drop_null_descriptions)
 
-    insert_elasticsearch = PythonOperator(task_id='Insert_Elasticsearch',
+    insert_data_elasticsearch = PythonOperator(task_id='Insert_Elasticsearch',
                                  python_callable=insert_elasticsearch)
 
-    query_scf >> concat_dfs >> drop_columns >> drop_null_descriptions >> insert_elasticsearch
+    get_scf_data >> concat_dataframes >> drop_cols >> drop_empty_descriptions >> insert_data_elasticsearch
