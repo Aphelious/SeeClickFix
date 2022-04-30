@@ -119,8 +119,8 @@ with DAG('seeclickfix',
          default_args=default_args,
     schedule_interval=timedelta(minutes=30)) as dag:
 
-    query_scf = PythonOperator(task_id='Query_SCF',
-                               pythoncallable=query_scf)
+    request_scf = PythonOperator(task_id='Request_SCF',
+                               pythoncallable=request_scf)
 
     concat_dfs = PythonOperator(task_id='Concat_DFs',
                                pythoncallable=concat_dfs)
