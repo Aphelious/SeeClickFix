@@ -120,16 +120,16 @@ with DAG('seeclickfix',
     schedule_interval=timedelta(minutes=30)) as dag:
 
     request_scf = PythonOperator(task_id='Request_SCF',
-                               pythoncallable=request_scf)
+                               python_callable=request_scf)
 
     concat_dfs = PythonOperator(task_id='Concat_DFs',
-                               pythoncallable=concat_dfs)
+                               python_callable=concat_dfs)
 
     drop_columns = PythonOperator(task_id='Drop_Columns',
-                                  pythoncallable=drop_columns)
+                                  python_callable=drop_columns)
 
     drop_null_descriptions = PythonOperator(task_id='Drop_Null_Descriptions',
-                                            pythoncallable=drop_null_descriptions)
+                                            python_callable=drop_null_descriptions)
 
     insert_elasticsearch = PythonOperator(task_id='Insert_Elasticsearch',
                                  python_callable=insert_elasticsearch)
