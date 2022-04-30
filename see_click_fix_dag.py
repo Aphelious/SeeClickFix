@@ -9,9 +9,10 @@ from airflow import DAG
 from airflow.operators.python import PythonOperator
 
 
-dataframes = []
+filepath = '/Users/mike/Desktop/Main/Programming/Projects/Tutorials/311/scf_issues_test.csv'
 
 def request_scf():
+    dataframes = []
     url = 'https://seeclickfix.com/api/v2/issues?'
     params = {'place_url': 'bernalillo-county', 'per_page': '200'}
     r = requests.get(url, params=params)
@@ -32,14 +33,12 @@ def request_scf():
                 r = r.json()
                 df = pd.json_normalize(r, record_path="issues")
                 dataframes.append(df)
-
-def concat_dfs(dataframes):
     full_df = pd.concat(dataframes)
-    full_df.to_csv('/Users/mike/Desktop/Main/Programming/Projects/Tutorials/311/scf_issues.csv', index=False)
+    full_df.to_csv(filepath, index=False)
 
 
 def drop_columns():
-    df = pd.read_csv('/Users/mike/Desktop/Main/Programming/Projects/Tutorials/311/scf_issues.csv')
+    df = pd.read_csv(filepath)
     cols = ['flag_url',
            'comment_url',
            'request_type.url',
@@ -59,25 +58,25 @@ def drop_columns():
            'private_visibility',
            'url']
     df.drop(columns=cols, inplace=True)
-    df.to_csv('/Users/mike/Desktop/Main/Programming/Projects/Tutorials/311/scf_issues.csv', index=False)
+    df.to_csv(filepath, index=False)
 
 
 def convert_to_datetime():
-    df = pd.read_csv('/Users/mike/Desktop/Main/Programming/Projects/Tutorials/311/scf_issues.csv')
+    df = pd.read_csv(filepath)
     cols = ['created_at', 'acknowledged_at', 'closed_at', 'reopened_at', 'updated_at']
     for col in cols:
         df[col] = pd.to_datetime(df[col])
-    df.to_csv('/Users/mike/Desktop/Main/Programming/Projects/Tutorials/311/scf_issues.csv', index=False)
+    df.to_csv(filepath)
 
 
 def drop_null_descriptions():
     '''Drop all rows where summary and description columns are null'''
 
-    df = pd.read_csv('/Users/mike/Desktop/Main/Programming/Projects/Tutorials/311/scf_issues.csv')
+    df = pd.read_csv(filepath)
     orig_df_len = len(df.index)
     new_df = df.dropna(axis='index', how='all', subset=['summary', 'description'])
     new_df_len = len(new_df.index)
-    new_df.to_csv('/Users/mike/Desktop/Main/Programming/Projects/Tutorials/311/scf_issues.csv', index=False)
+    new_df.to_csv(filepath, index=False)
     return f'Total rows dropped: {orig_df_len - new_df_len}'
 
 
@@ -88,7 +87,7 @@ def insert_elasticsearch():
     cert = os.environ.get('ELASTIC_CERT')
     es = Elasticsearch(host, ca_certs=cert, basic_auth=("elastic", password))
 
-    df = pd.read_csv('/Users/mike/Desktop/Main/Programming/Projects/Tutorials/311/scf_issues_test.csv')
+    df = pd.read_csv(filepath)
     for i, r in df.iterrows():
         doc = r.to_json()
         res = es.index(index="seeclickfix2", document=doc)
@@ -122,9 +121,6 @@ with DAG('seeclickfix',
     get_scf_data = PythonOperator(task_id='Request_SCF',
                                python_callable=request_scf)
 
-    concat_dataframes = PythonOperator(task_id='Concat_DFs',
-                               python_callable=concat_dfs)
-
     drop_cols = PythonOperator(task_id='Drop_Columns',
                                   python_callable=drop_columns)
 
@@ -134,4 +130,4 @@ with DAG('seeclickfix',
     insert_data_elasticsearch = PythonOperator(task_id='Insert_Elasticsearch',
                                  python_callable=insert_elasticsearch)
 
-    get_scf_data >> concat_dataframes >> drop_cols >> drop_empty_descriptions >> insert_data_elasticsearch
+    get_scf_data >> drop_cols >> drop_empty_descriptions >> insert_data_elasticsearch
