@@ -23,7 +23,7 @@ many were storing broken or redundant web links back to the API data itself.
 These columns were dropped resulting in a dataset half the size. There were 
 also dates stored as strings which I then converted to proper datetimes.
 
-I then migrated the dataset to Elasticsearch, which was actually a pretty 
+I then migrated the dataset to Elasticsearch, which was for the most part a 
 straight-forward process. I also found a Python library that I may try out in 
 the future called 'es-pandas', which might make the process even easier or 
 be better in terms of data integrity -more research will be done into this 
