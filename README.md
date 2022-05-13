@@ -33,7 +33,7 @@ The primary reason for incorporating Elasticsearch was to take advantage
 of the Kibana dashboard tools, which I now see are quite powerful and provide 
 for very fast development. I created a few visualizations (samples below)
 that display the total number of records, a bar graph showing submitted 
-complaints over time, a pie/donut chart showing the proportion of the top
+complaints over time, a pie/donut chart showing the proportion of the top 
 complaint types. 
 
 It is my goal to find a dashboard tool to develop directly from Python but 
@@ -46,7 +46,10 @@ while migrating the data between these various systems. In particular, I had an
 issue writing directly from Pandas to Elasticsearch, as my latitude/longitude
 coordinate pairs ended up in the wrong format/data type for Elasticsearch/Kibana
 to recognize them as such. The issue turned out to be Pandas' datatype inference
-that happens under the hood. 
+that happens under the hood. I had to be more explicit in the way I was writing 
+the records to Elasticsearch in order for the correct data types to be preserved. 
+I now know that while Pandas is a powerful library for quickly exploring and 
+modifying data it should probably be avoided as the final write engine. 
 
 ###Visualization samples:
 
