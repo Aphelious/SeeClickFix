@@ -2,7 +2,8 @@
 
 SeeClickFix is an application some local municipalities uses to track resident's
 complaints about anything from graffiti, abandoned cars, broken fire hydrants, 
-etc.
+etc. It includes a public API from which records, in JSON format, can be 
+requested.   
 
 ---
 
@@ -36,7 +37,16 @@ complaints over time, a pie/donut chart showing the proportion of the top
 complaint types. 
 
 It is my goal to find a dashboard tool to develop directly from Python but 
-there are many available and I'm still researching which I'd like to learn. 
+there are many available and I'm still researching which I'd like to learn.
+
+###Challenges:
+
+The greatest challenge with this project was maintaining data integrity
+while migrating the data between these various systems. In particular, I had an
+issue writing directly from Pandas to Elasticsearch, as my latitude/longitude
+coordinate pairs ended up in the wrong format/data type for Elasticsearch/Kibana
+to recognize them as such. The issue turned out to be Pandas' datatype inference
+that happens under the hood. 
 
 ###Visualization samples:
 
@@ -48,4 +58,3 @@ there are many available and I'm still researching which I'd like to learn.
 
 ![Screenshot of Airflow DAG run](./assets/scf-dag-in-action.png 
 "Screenshot of Airflow DAG run")
-###
