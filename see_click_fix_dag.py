@@ -85,11 +85,14 @@ def drop_null_descriptions():
     return f'Total rows dropped: {orig_df_len - new_df_len}'
 
 
-def insert_elasticsearch():
+def insert_elasticsearch(host, password, cert):
     from elasticsearch import Elasticsearch
-    host = os.environ.get('ELASTIC_HOST')
-    password = os.environ.get('ELASTIC_PASSWORD')
-    cert = os.environ.get('ELASTIC_CERT')
+    if not host:
+        host = os.environ.get('ELASTIC_HOST')
+    if not password:
+        password = os.environ.get('ELASTIC_PASSWORD')
+    if not cert:
+        cert = os.environ.get('ELASTIC_CERT')
     es = Elasticsearch(host, ca_certs=cert, basic_auth=("elastic", password))
 
     df = pd.read_csv(filename)
