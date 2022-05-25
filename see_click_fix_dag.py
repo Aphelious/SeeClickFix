@@ -11,6 +11,11 @@ from airflow.operators.python import PythonOperator
 
 filename = 'scf_records.csv'
 
+# Add Elasticsearch credentials here, else None is default and environment variables will be used:
+host = None
+password = None
+cert = None
+
 def request_scf():
     dataframes = []
     url = 'https://seeclickfix.com/api/v2/issues?'
