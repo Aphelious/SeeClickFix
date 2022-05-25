@@ -102,11 +102,14 @@ def insert_elasticsearch(host, password, cert):
         print(res)
 
 
-def query_elasticsearch():
+def query_elasticsearch(host, password, cert):
     from elasticsearch import Elasticsearch
-    host = os.environ.get('ELASTIC_HOST')
-    password = os.environ.get('ELASTIC_PASSWORD')
-    cert = os.environ.get('ELASTIC_CERT')
+    if not host:
+        host = os.environ.get('ELASTIC_HOST')
+    if not password:
+        password = os.environ.get('ELASTIC_PASSWORD')
+    if not cert:
+        cert = os.environ.get('ELASTIC_CERT')
     es = Elasticsearch(host, ca_certs=cert, basic_auth=("elastic", password))
 
     query = {"matchall":{}}
