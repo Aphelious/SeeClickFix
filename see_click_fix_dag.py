@@ -4,6 +4,7 @@ import time
 import datetime as dt
 from datetime import timedelta
 import os
+import csv
 
 from airflow import DAG
 from airflow.operators.python import PythonOperator
