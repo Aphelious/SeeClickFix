@@ -85,6 +85,17 @@ def drop_null_descriptions():
     return f'Total rows dropped: {orig_df_len - new_df_len}'
 
 
+def format_coordinates():
+    with open(filename) as f:
+        csv_file_object = csv.reader(f)
+        next(csv_file_object)  # Get rid of header
+        data_long = []
+        for row in csv_file_object:
+            formatted_row = [float(coord) for coord in row[0][1:-1].split(", ")]
+            coord_dict = {'location': formatted_row}
+            data_long.append(coord_dict)
+        return data_long
+
 def insert_elasticsearch(host, password, cert):
     from elasticsearch import Elasticsearch
     if not host:
