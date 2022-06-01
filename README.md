@@ -39,6 +39,10 @@ complaint types.
 It is my goal to find a dashboard tool to develop directly from Python but 
 there are many available and I'm still researching which I'd like to learn.
 
+Update: I've decided to do a significant rewrite of this project to reflect some 
+of the best practices I've been learning about namely creating staging areas 
+for my data, data validation, and getting away from Pandas for transforms.
+
 ###Challenges:
 
 The greatest challenge with this project was maintaining data integrity
